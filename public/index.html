@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#204d43"><title>面向 · Interview Grove</title>
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/visual.css"><link rel="stylesheet" href="/review.css"><link rel="stylesheet" href="/practice.css"><script type="module" src="/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a href="/" class="brand" aria-label="面向首页"><span class="brand-symbol">m<span>·</span></span><span>面向<small>INTERVIEW GROVE</small></span></a>
+      <nav aria-label="主要导航">
+        <button class="nav-item active" data-view="home"><span data-icon="grid"></span>练习空间</button>
+        <button class="nav-item" data-view="history"><span data-icon="history"></span>面试记录<span class="nav-count" id="history-count">0</span></button>
+        <button class="nav-item" data-view="method"><span data-icon="branch"></span>练习方法</button>
+      </nav>
+      <div class="sidebar-note"><span class="tiny-sprout">✳</span><p>认真准备，<br>自信表达。</p></div>
+      <div class="local-profile"><div class="profile-avatar">我</div><div><span id="profile-name">访客练习空间</span><small id="save-status">当前浏览器保存</small></div></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><div id="breadcrumb">练习空间 <span>/</span> 开始新的可能</div><div class="topbar-right" id="account-actions"><button class="secondary-button" data-login>登录 / 注册</button></div></header>
+      <main id="main"></main>
+      <footer>面向 Interview Grove</footer>
+    </div>
+  </div>
+  <dialog id="setup-dialog" aria-labelledby="setup-title">
+    <form id="setup-form">
+      <div class="modal-heading"><span class="eyebrow">A LITTLE CONTEXT</span><button type="button" class="icon-button" id="close-setup" aria-label="关闭">×</button></div>
+      <h2 id="setup-title">这次，想练什么</h2><p class="muted" id="setup-subtitle">先读材料，再安排这一轮的考察范围</p>
+      <label for="topic">练习方向</label><select id="topic" name="topic"><option value="job">求职面试</option><option value="academic">考研复试</option></select>
+      <fieldset class="mode-picker" id="job-track"><legend>求职练习方式</legend><label><input type="radio" name="practice" value="project" checked><span><strong>项目技术练习</strong><small>上传项目，从功能到实现逐步理解</small></span></label><label><input type="radio" name="practice" value="resume"><span><strong>简历模拟面试</strong><small>上传简历，结合岗位覆盖项目与实习经历</small></span></label></fieldset>
+      <div id="project-options"><label for="project-scope">项目考察范围</label><select id="project-scope"><option value="whole">整个项目 · 适合小项目、开源移植与学习实践</option><option value="module">我负责的模块 · 适合大型或团队项目</option></select><div id="module-field" hidden><label for="responsible-module">负责模块或目录</label><input id="responsible-module" maxlength="200" placeholder="例如 Watch/display、OLED 显示、订单服务"><small class="field-note">填写代码中的目录名或技术关键词，只考察该模块及直接相关的接口</small></div></div>
+      <div id="anchor-field"><label for="anchor" id="anchor-label">目标岗位 <span class="optional">选填</span></label><input id="anchor" name="anchor" maxlength="160" placeholder="例如：后端开发工程师"></div>
+      <section id="academic-options" hidden><label for="academic-major">报考专业</label><input id="academic-major" maxlength="120" placeholder="例如：计算机技术、电子信息、信息与通信工程"><label for="academic-range">复试练习范围</label><select id="academic-range"><option value="cs408">408 · 数据结构、组成原理、操作系统、网络</option><option value="signals">信号与系统</option><option value="custom">自定义科目或院校复试范围</option></select><label for="academic-scope">具体科目或章节（选填，自定义时必填）</label><textarea id="academic-scope" maxlength="2000" rows="3" placeholder="例如：只练操作系统与计算机网络；或信号与系统中的卷积、傅里叶变换、采样定理"></textarea><small class="field-note">408是练习科目范围，不是专业名称。预设不代表所有学校的复试要求；可按目标院校公布的范围填写具体科目。填写后优先在该范围出题。</small></section>
+      <div id="runtime-field"><label for="runtime">面试方式</label><select id="runtime"><option value="demo">规则体验 · 不调用模型</option><option value="ai" disabled>AI 面试 · 等待本机配置</option></select></div>
+      <div id="duration-field"><label for="duration">预计练习时长</label><select id="duration"><option value="10">约10分钟 · 4个考察点，最多1次深入追问</option><option value="20" selected>约20分钟 · 6个考察点，最多2次深入追问</option><option value="30">约30分钟 · 8个考察点，最多3次深入追问</option></select></div>
+      <section class="material-import" id="material-import"><h3 id="material-title">读取项目代码</h3><div class="upload-grid"><label for="resume-file" id="resume-upload" hidden>简历图片<input id="resume-file" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG / JPEG / WebP · 最多4MB</small></label><label for="project-folder" id="folder-upload">项目文件夹<input id="project-folder" type="file" webkitdirectory multiple><small>保留文件路径与代码片段，排除依赖、构建产物和明显凭据文件</small></label></div><p class="field-note" id="material-privacy">读取的代码片段会发送给当前模型服务并随练习保存；请先移除私密内容。大项目会显示实际读取范围，不把部分读取称为全仓库分析</p><button type="button" class="secondary-button" id="extract-materials">读取项目并识别考察点</button><p class="field-note" id="material-status" role="status">选择文件夹后，先读取材料</p><div id="material-preview"></div></section>
+      <label for="project" id="project-label">项目补充 <span class="optional">选填</span></label><textarea id="project" name="project" rows="4" maxlength="3000" placeholder="例如：这是跟课程完成的开源移植，我使用 STM32F103；希望从项目功能和实现流程开始理解，不预设原创设计……"></textarea>
+      <p id="setup-error" class="field-note" role="alert"></p>
+      <p class="field-note" id="setup-note">当前为规则版；背景仅作备忘，尚不支持语义理解与专业判分。</p>
+      <div class="privacy-note"><span data-icon="shield"></span><span>内容仅保存在本机浏览器，不会上传。请勿填写敏感个人信息。</span></div>
+      <button class="primary-button full-width" type="submit">准备好了，开始面试 <span>↗</span></button>
+    </form>
+  </dialog>
+  <dialog id="account-dialog" aria-labelledby="account-title"><form id="account-form"><div class="modal-heading"><span class="eyebrow">YOUR OWN PRACTICE SPACE</span><button type="button" class="icon-button" id="close-account" aria-label="关闭登录">×</button></div><h2 id="account-title">把练习，留给自己</h2><p class="muted">账号记录保存在这台电脑的服务中，重新打开仍可继续</p><label for="auth-mode">账号操作</label><select id="auth-mode"><option value="login">登录已有账号</option><option value="register">创建新账号</option></select><label for="username">用户名</label><input id="username" autocomplete="username" minlength="3" maxlength="32" pattern="[\p{L}\p{N}_\-]{3,32}" required><label for="password">密码</label><input id="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required><p class="field-note">用户名3–32位文字、数字、下划线或短横线；密码至少8位。访客记录不会自动合入账号</p><p id="auth-error" role="alert"></p><button type="submit" class="primary-button full-width">继续</button></form></dialog>
+  <div id="toast" role="status"></div>
+</body>
+</html>
